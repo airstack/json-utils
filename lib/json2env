@@ -1,4 +1,5 @@
 #!/bin/sh -e
+
 # Convert a JSON string into ENV files.
 #
 # This script is useful to make values in JSON objects available as

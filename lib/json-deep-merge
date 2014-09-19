@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/sh -e
+
 ###*
 # JSON object deep merge helper script.
 #
