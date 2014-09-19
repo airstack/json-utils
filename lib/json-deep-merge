@@ -1,0 +1,58 @@
+#!/bin/sh
+###*
+# JSON object deep merge helper script.
+#
+# Usage: core-json-deepmerge file1.json file2.json <file3.json> <...>
+#
+# @return 0 on success
+###
+
+
+###*
+# Recursively merge contents of two or more json files.
+#
+# usage: json_deepmerge file0 file1 file2 file3 ...
+# Examples: json_deepmerge /package/airstack/core/config.json /package/airstack/dropbear/config.json
+#           files="/package/airstack/core/config.json /package/airstack/dropbear/config.json /package/airstack/serf/config.json /package/airstack/haproxy/config.json"
+#           json_deepmerge $files
+#
+# Does a recursive deep merge on a list of json files. Posix-shell compatible.
+# New key values overwrite old values.
+# Dependencies: jq
+# Outputs results to stdout
+#
+# @param filenames  Space separated list of two or more json files
+# @return 0 on success, jq error codes on failure
+# Reference: http://stackoverflow.com/questions/19529688/how-to-merge-2-json-file-using-jq
+###
+json_deep_merge() {
+  local count; count=0
+  local params; params=""
+  local tmp_files; tmp_files="$@"
+  while [ $#  -gt 0 ]; do
+    params="$params.[$count]"
+    [ "$#" -gt 1 ] && params=$params" * "
+    count=$(( count+1 ));
+    shift
+  done
+  # slurp tmp_files into a big array and multiply them
+  jq --slurp "$params" $tmp_files
+}
+
+json_deep_merge_error_check() {
+  if [ "$?" -ne 0 ]; then
+    local err_value; err_value="$?"
+    local prefix; prefix="[ERROR] ${basename $0}"
+    printf "%s\n" "$prefix ${1}" >&2
+    exit 113
+  fi
+}
+
+
+# Main
+# Only run script if params are provided.
+# Useful for sourcing the file for testing or direct access to functions.
+if [ "$#" -gt 0 ]; then
+  json_deepmerge "$@"
+  json_deepmerge_error_check "json_deepmerge"
+fi
