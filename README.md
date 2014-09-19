@@ -1,6 +1,6 @@
 # JSON Utils
 
-Shell scripts for parsing, querying, and manipulating JSON.
+Shell scripts for processing JSON and exporting JSON to ENV vars.
 
 
 # Requirements
