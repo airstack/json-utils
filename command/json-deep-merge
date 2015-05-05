@@ -54,6 +54,6 @@ json_deep_merge_error_check() {
 # Only run script if params are provided.
 # Useful for sourcing the file for testing or direct access to functions.
 if [ "$#" -gt 0 ]; then
-  json_deepmerge "$@"
-  json_deepmerge_error_check "json_deepmerge"
+  json_deep_merge "$@"
+  json_deep_merge_error_check "json_deep_merge"
 fi
